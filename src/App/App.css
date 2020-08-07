@@ -1,0 +1,15 @@
+.Container {
+  width: 75%;
+  margin: 0 auto;
+}
+.Title {
+  background-color: aquamarine;
+  width: 100%;
+  text-align: center;
+  font-size: 24px;
+  padding: 10px;
+}
+
+.deleteSelected {
+  margin: 0 15px;
+}
