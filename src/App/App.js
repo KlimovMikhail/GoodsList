@@ -7,8 +7,8 @@ import { goods } from '../Mocks/GoodsMock'
 import { category } from '../Mocks/CategoryMock'
 import GoodsListForm from '../GoodsListForm/GoodsListForm'
 import { addNewItem, removeElementById, getTotal, changeGoodsSelected, selectedItems, changeItem, removeSelectedItems, checkSelected } from '../Utils/goodsUtils'
-import GoodsTotalWeight from '../GoodsTotalWeight/GoodsTotalWeight'
-import SelectedItemWeigt from '../SelectedItemWeigt/SelectedItemWeight'
+import { GoodsTotalWeight } from '../GoodsTotalWeight/GoodsTotalWeight'
+import { SelectedItemWeigt } from '../SelectedItemWeigt/SelectedItemWeight'
 
 export default class App extends Component {
   
