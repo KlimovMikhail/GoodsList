@@ -11,6 +11,7 @@ import GoodsTotalWeight from '../GoodsTotalWeight/GoodsTotalWeight'
 import SelectedItemWeigt from '../SelectedItemWeigt/SelectedItemWeight'
 
 export default class App extends Component {
+  
   state = {
     category,
     goods,
@@ -37,9 +38,11 @@ export default class App extends Component {
   onSaveItem = (newElement, id) => {
     this.setState(({ goods }) => {
       const newArr = changeItem(goods, newElement, id)
+      const newSelectedArray = selectedItems(newArr)
       return {
         goods: newArr,
         total: getTotal(newArr),
+        totalWeightSelectedItem: getTotal(newSelectedArray)
       }
     })
   }
