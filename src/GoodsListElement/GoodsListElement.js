@@ -1,35 +1,36 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import './GoodsListElement.css'
 import { getCategory } from '../Utils/categoryUtils'
 import PropTypes from 'prop-types';
 
-export default class GoodsListElement extends Component {
-  state = {
+export const GoodsListElement = ({ category, good, onDelete, onToggle, onSaveItem }) => {
+  const [inputChange, setInputChange] = useState({
     isEditing: false,
     title: "",
     weight: "",
     description: "",
     categoryName: "",
     disabled: true
+  })
+
+  const onDeleteItem = () => {
+    onDelete(good.id)
   }
 
-  onDelete = () => {
-    this.props.onDelete(this.props.good.id)
+  const onToggleItem = () => {
+    onToggle(good.id);
   }
 
-  onToggle = () => {
-    this.props.onToggle(this.props.good.id);
-  }
-
-  onInputChange = ({ target }) => {
-    this.setState({
+  const onInputChange = ({ target }) => {
+    setInputChange({
+      ...inputChange,
       [target.name]: target.value
     })
   }
 
-  onEditItem = () => {
-    const { title, weight, description, categoryName } = this.props.good
-    this.setState({
+  const onEditItem = () => {
+    const { title, weight, description, categoryName } = good
+    setInputChange({
       isEditing: true,
       title: title,
       weight: weight,
@@ -39,63 +40,62 @@ export default class GoodsListElement extends Component {
     })
   }
 
-  onSaveItem = () => {
-    this.props.onSaveItem(this.state, this.props.good.id)
-    this.setState({
+  const onSaveChangedItem = () => {
+    onSaveItem(inputChange, good.id)
+    setInputChange({
+      ...inputChange,
       isEditing: false,
       disabled: true
     })
   }
-  render() {
-    const { isEditing, disabled } = this.state
-    const { title, weight, description, categoryName } = this.props.good
-    const { category } = this.props
-    const inputTitle = <input
-      onChange={this.onInputChange}
-      name="title"
-      className="GoodsListElement_Column GoodsListElement_Column_Title"
-      defaultValue={title}
-    />
-    const inputWeight = <input
-      onChange={this.onInputChange}
-      name="weight"
-      className="GoodsListElement_Column GoodsListElement_Column_Weight"
-      defaultValue={weight}
-    />
-    const inputDescription = <input
-      onChange={this.onInputChange}
-      name="description"
-      className="GoodsListElement_Column GoodsListElement_Column_Description"
-      defaultValue={description}
-    />
-    const choseCategory = <select
-      onChange={this.onInputChange}
-      name="categoryName"
-      className="GoodsListElement_Column GoodsListElement_Column_Category"
-      defaultValue={categoryName}>
-      <option value="0" >Chose category</option>
-      {category.map((item) => <option key={item.id} value={item.categoryName}> {item.categoryName} </option>)}
-    </select>
-    return (
-      <div className="GoodsListElement">
-        <input name="title" type="checkbox" onClick={this.onToggle} />
-        {isEditing ? inputTitle : <div className="GoodsListElement_Column GoodsListElement_Column_Title">{title}</div>}
-        {isEditing ? inputWeight : <div className="GoodsListElement_Column GoodsListElement_Column_Weight">{weight}</div>}
-        {isEditing ? inputDescription : <div className="GoodsListElement_Column GoodsListElement_Column_Description">{description}</div>}
-        {isEditing ? choseCategory : <div className="GoodsListElement_Column GoodsListElement_Column_Category">{getCategory(categoryName)}</div>}
 
-        <div className="GoodsListElement_Column GoodsListElement_Button">
-          <button onClick={this.onEditItem}>Edit</button>
-        </div>
-        <div className="GoodsListElement_Column GoodsListElement_Button">
-          <button onClick={this.onSaveItem} disabled={disabled} >Save</button>
-        </div>
-        <div className="GoodsListElement_Column GoodsListElement_Button">
-          <button onClick={this.onDelete}>Delete</button>
-        </div>
+  const { title, weight, description, categoryName } = good
+  const inputTitle = <input
+    onChange={onInputChange}
+    name="title"
+    className="GoodsListElement_Column GoodsListElement_Column_Title"
+    defaultValue={title}
+  />
+  const inputWeight = <input
+    onChange={onInputChange}
+    name="weight"
+    className="GoodsListElement_Column GoodsListElement_Column_Weight"
+    defaultValue={weight}
+  />
+  const inputDescription = <input
+    onChange={onInputChange}
+    name="description"
+    className="GoodsListElement_Column GoodsListElement_Column_Description"
+    defaultValue={description}
+  />
+  const choseCategory = <select
+    onChange={onInputChange}
+    name="categoryName"
+    className="GoodsListElement_Column GoodsListElement_Column_Category"
+    defaultValue={categoryName}>
+    <option value="0" >Chose category</option>
+    {category.map((item) => <option key={item.id} value={item.categoryName}> {item.categoryName} </option>)}
+  </select>
+
+  return (
+    <div className="GoodsListElement">
+      <input name="title" type="checkbox" onClick={onToggleItem} />
+      {inputChange.isEditing ? inputTitle : <div className="GoodsListElement_Column GoodsListElement_Column_Title">{title}</div>}
+      {inputChange.isEditing ? inputWeight : <div className="GoodsListElement_Column GoodsListElement_Column_Weight">{weight}</div>}
+      {inputChange.isEditing ? inputDescription : <div className="GoodsListElement_Column GoodsListElement_Column_Description">{description}</div>}
+      {inputChange.isEditing ? choseCategory : <div className="GoodsListElement_Column GoodsListElement_Column_Category">{getCategory(categoryName)}</div>}
+
+      <div className="GoodsListElement_Column GoodsListElement_Button">
+        <button onClick={onEditItem}>Edit</button>
       </div>
-    )
-  }
+      <div className="GoodsListElement_Column GoodsListElement_Button">
+        <button onClick={onSaveChangedItem} disabled={inputChange.disabled} >Save</button>
+      </div>
+      <div className="GoodsListElement_Column GoodsListElement_Button">
+        <button onClick={onDeleteItem}>Delete</button>
+      </div>
+    </div>
+  )
 }
 
 GoodsListElement.propTypes = {

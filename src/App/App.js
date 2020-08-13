@@ -1,91 +1,80 @@
-import React, { Component } from 'react'
+import React, { useState, useCallback } from 'react'
 
 import './App.css'
 
-import GoodsList from '../GoodsList/GoodsList'
-import { goods } from '../Mocks/GoodsMock'
+import { GoodsList } from '../GoodsList/GoodsList'
+import { goods as initialGoods } from '../Mocks/GoodsMock'
 import { category } from '../Mocks/CategoryMock'
-import GoodsListForm from '../GoodsListForm/GoodsListForm'
+import { GoodsListForm } from '../GoodsListForm/GoodsListForm'
 import { addNewItem, removeElementById, getTotal, changeGoodsSelected, selectedItems, changeItem, removeSelectedItems, checkSelected } from '../Utils/goodsUtils'
 import { GoodsTotalWeight } from '../GoodsTotalWeight/GoodsTotalWeight'
 import { SelectedItemWeigt } from '../SelectedItemWeigt/SelectedItemWeight'
 
-export default class App extends Component {
-  
-  state = {
-    category,
-    goods,
-    total: getTotal(goods),
-    totalWeightSelectedItem: "0",
-  }
+export const App = () => {
+  const [goods, setGoods] = useState(initialGoods);
+  const [total, setTotal] = useState(getTotal(goods));
+  const [totalWeightSelectedItem, setTotalWeightSelectedItem] = useState(0);
 
-  recalculateTotal = () => {
-    this.setState((state) => ({
-      total: getTotal(state.goods)
-    }))
-  }
-
-  onAdd = (newElement) => {
-    this.setState(({ goods }) => {
+  const onAdd = useCallback(
+    (newElement) => {
       const newArray = addNewItem(newElement, goods)
-      return {
-        goods: newArray,
-        total: getTotal(newArray),
-      }
-    })
-  }
+      setGoods(newArray)
+      setTotal(getTotal(newArray))
+    },
+    [goods],
+  )
 
-  onSaveItem = (newElement, id) => {
-    this.setState(({ goods }) => {
+  const onSaveItem = useCallback(
+    (newElement, id) => {
       const newArr = changeItem(goods, newElement, id)
       const newSelectedArray = selectedItems(newArr)
-      return {
-        goods: newArr,
-        total: getTotal(newArr),
-        totalWeightSelectedItem: getTotal(newSelectedArray)
-      }
-    })
-  }
+      setGoods(newArr)
+      setTotal(getTotal(newArr))
+      setTotalWeightSelectedItem(getTotal(newSelectedArray))
+    },
+    [goods],
+  )
 
-  onDelete = (id) => {
-    const newArray = removeElementById(id, this.state.goods)
-    const array = selectedItems(newArray)
-    this.setState({
-      goods: newArray,
-      total: getTotal(newArray),
-      totalWeightSelectedItem: getTotal(array)
-    })
-  }
+  const onDelete = useCallback(
+    (id) => {
+      const newArray = removeElementById(id, goods)
+      const array = selectedItems(newArray)
+      setGoods(newArray)
+      setTotal(getTotal(newArray))
+      setTotalWeightSelectedItem(getTotal(array))
+    },
+    [goods],
+  )
 
-  onToggle = (id) => {
-    this.setState(({ goods }) => {
+  const onToggle = useCallback(
+    (id) => {
       const arr = changeGoodsSelected(goods, id)
       const selectedItemsArray = selectedItems(arr)
-      return { goods: arr, totalWeightSelectedItem: getTotal(selectedItemsArray) }
-    })
-  }
+      setGoods(arr)
+      setTotalWeightSelectedItem(getTotal(selectedItemsArray))
+    },
+    [goods],
+  )
 
-  deleteSelected = () => {
-    const selectedArray = removeSelectedItems(this.state.goods)
-    const array = selectedItems(selectedArray)
-    this.setState({
-      goods: selectedArray,
-      total: getTotal(selectedArray),
-      totalWeightSelectedItem: getTotal(array)
-    })
-  }
+  const deleteSelected = useCallback(
+    () => {
+      const selectedArray = removeSelectedItems(goods)
+      const array = selectedItems(selectedArray)
+      setGoods(selectedArray)
+      setTotal(getTotal(selectedArray))
+      setTotalWeightSelectedItem(getTotal(array))
+    },
+    [goods],
+  )
 
-  render() {
-    const { total, goods, category, totalWeightSelectedItem } = this.state
-    return (
-      <div className="Container">
-        <div className="Title">Fridge</div>
-        <GoodsList onSaveItem={this.onSaveItem} goods={goods} category={category} onDelete={this.onDelete} onToggle={this.onToggle} />
-        <GoodsTotalWeight total={total} />
-        <SelectedItemWeigt totalWeightSelectedItem={totalWeightSelectedItem} />
-        <GoodsListForm category={category} onAdd={this.onAdd} />
-        <button className="deleteSelected" onClick={this.deleteSelected} disabled={checkSelected(goods)} >Delete Selected</button>
-      </div>
-    )
-  }
+  return (
+    <div className="Container">
+      <div className="Title">Fridge</div>
+      <GoodsList onSaveItem={onSaveItem} goods={goods} category={category} onDelete={onDelete} onToggle={onToggle} />
+      <GoodsTotalWeight total={total} />
+      <SelectedItemWeigt totalWeightSelectedItem={totalWeightSelectedItem} />
+      <GoodsListForm category={category} onAdd={onAdd} />
+      <button className="deleteSelected" onClick={deleteSelected} disabled={checkSelected(goods)} >Delete Selected</button>
+    </div>
+  )
 }
