@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import './GoodsListForm.css'
 import PropTypes from 'prop-types';
