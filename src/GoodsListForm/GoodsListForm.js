@@ -19,8 +19,6 @@ export const GoodsListForm = ({ category, onAdd }) => {
     setInputChange({ title: '', weight: '', description: '', categoryName: '' })
   }
 
-  console.log("inputChange", inputChange);
-
   return (
     <div>
       <form

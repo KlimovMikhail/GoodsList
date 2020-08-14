@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import './GoodsTotalWeight.css';
 import PropTypes from 'prop-types';
