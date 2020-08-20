@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
-import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+import { useSelector, shallowEqual } from 'react-redux'
 
 import { GoodsListElement } from '../GoodsListElement/GoodsListElement'
 import PropTypes from 'prop-types';

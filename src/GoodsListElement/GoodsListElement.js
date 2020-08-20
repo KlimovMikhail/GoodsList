@@ -4,7 +4,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux'
 
 import './GoodsListElement.css'
 import { getCategory } from '../Utils/categoryUtils'
-import * as goodsAction from '../actions/goodsActions'
+import * as goodsAction from '../Store/actions/goodsActions'
 import { category } from '../Mocks/CategoryMock'
 import PropTypes from 'prop-types';
 

@@ -1,5 +1,5 @@
-import { goods } from '../Mocks/GoodsMock'
-import { addNewItem, removeElementById, getTotal, changeGoodsSelected, selectedItems, changeItem, removeSelectedItems } from '../Utils/goodsUtils'
+import { goods } from '../../Mocks/GoodsMock'
+import { addNewItem, removeElementById, getTotal, changeGoodsSelected, selectedItems, changeItem, removeSelectedItems } from '../../Utils/goodsUtils'
 
 
 const initialState = {

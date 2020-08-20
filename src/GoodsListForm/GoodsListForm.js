@@ -3,8 +3,8 @@ import React, { useCallback } from 'react'
 import './GoodsListForm.css'
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux'
-import * as formAction from '../actions/formActions'
-import * as goodsAction from '../actions/goodsActions'
+import * as formAction from '../Store/actions/formActions'
+import * as goodsAction from '../Store/actions/goodsActions'
 import { checkSelected } from '../Utils/goodsUtils'
 import { category } from '../Mocks/CategoryMock'
 
