@@ -1,10 +1,15 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
+import { useSelector, useDispatch, shallowEqual } from 'react-redux'
+
 import './GoodsListElement.css'
 import { getCategory } from '../Utils/categoryUtils'
+import * as goodsAction from '../actions/goodsActions'
+import { category } from '../Mocks/CategoryMock'
 import PropTypes from 'prop-types';
 
-export const GoodsListElement = ({ category, good, onDelete, onToggle, onSaveItem }) => {
+export const GoodsListElement = ({ good }) => {
+  const { title, weight, description, categoryName } = good
   const [inputChange, setInputChange] = useState({
     isEditing: false,
     title: "",
@@ -14,13 +19,15 @@ export const GoodsListElement = ({ category, good, onDelete, onToggle, onSaveIte
     disabled: true
   })
 
-  const onDeleteItem = () => {
-    onDelete(good.id)
-  }
+  const dispatch = useDispatch()
 
-  const onToggleItem = () => {
-    onToggle(good.id);
-  }
+  const onDelete = useCallback(() => {
+      dispatch(goodsAction.deleteItem(good.id))
+    }, [dispatch, good.id])
+
+  const onToggle = useCallback(() => {
+      dispatch(goodsAction.toggleItem(good.id))
+    }, [dispatch, good.id])
 
   const onInputChange = ({ target }) => {
     setInputChange({
@@ -30,7 +37,6 @@ export const GoodsListElement = ({ category, good, onDelete, onToggle, onSaveIte
   }
 
   const onEditItem = () => {
-    const { title, weight, description, categoryName } = good
     setInputChange({
       isEditing: true,
       title: title,
@@ -42,7 +48,7 @@ export const GoodsListElement = ({ category, good, onDelete, onToggle, onSaveIte
   }
 
   const onSaveChangedItem = () => {
-    onSaveItem(inputChange, good.id)
+    dispatch(goodsAction.saveItem(inputChange, good.id))
     setInputChange({
       ...inputChange,
       isEditing: false,
@@ -50,7 +56,6 @@ export const GoodsListElement = ({ category, good, onDelete, onToggle, onSaveIte
     })
   }
 
-  const { title, weight, description, categoryName } = good
   const inputTitle = <input
     onChange={onInputChange}
     name="title"
@@ -80,7 +85,7 @@ export const GoodsListElement = ({ category, good, onDelete, onToggle, onSaveIte
 
   return (
     <div className="GoodsListElement">
-      <input name="title" type="checkbox" onClick={onToggleItem} />
+      <input name="title" type="checkbox" onClick={onToggle} />
       {inputChange.isEditing ? inputTitle : <div className="GoodsListElement_Column GoodsListElement_Column_Title">{title}</div>}
       {inputChange.isEditing ? inputWeight : <div className="GoodsListElement_Column GoodsListElement_Column_Weight">{weight}</div>}
       {inputChange.isEditing ? inputDescription : <div className="GoodsListElement_Column GoodsListElement_Column_Description">{description}</div>}
@@ -93,7 +98,7 @@ export const GoodsListElement = ({ category, good, onDelete, onToggle, onSaveIte
         <button onClick={onSaveChangedItem} disabled={inputChange.disabled} >Save</button>
       </div>
       <div className="GoodsListElement_Column GoodsListElement_Button">
-        <button onClick={onDeleteItem}>Delete</button>
+        <button onClick={onDelete}>Delete</button>
       </div>
     </div>
   )

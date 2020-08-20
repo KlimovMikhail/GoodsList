@@ -4,6 +4,7 @@ export const newItemFromData = (data) => {
   return {
     id: uuidv4(),
     ...data,
+    selected: false,
   }
 }
 
